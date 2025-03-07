@@ -2,7 +2,8 @@ import { NotificationRepository } from "../../domain/repositories/NotificationRe
 import { Notification } from "../../domain/entities/Notification";
 
 import { IMail } from "../../domain/interfaces/IMail";
-import { NotificationModel } from "../database/models/NotificationModel";
+import { NotificationModel } from "../database/Models/NotificationModel";
+
 
 export class MongoNotificationRepository implements NotificationRepository {
   async save(notification: IMail): Promise<void> {

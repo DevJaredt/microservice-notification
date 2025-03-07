@@ -1,8 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import router from "./routes/notificationRoutes";
-import { container } from "./container";
-import { SendNotificationUseCase } from "../application/use-cases/SendNotificationUseCase";
 
 const app = express();
 app.use(express.json());
