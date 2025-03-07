@@ -1,5 +1,15 @@
+import { inject, injectable } from "inversify";
+import { NotificationRepository } from "../../domain/repositories/NotificationRepository";
+import { IMail } from "../../domain/interfaces/IMail";
+
+@injectable()
 export class SendNotificationUseCase {
-    async execute(notificationData: any): Promise<void> {
-        console.log('send email with data', notificationData)
+    constructor(
+        @inject('NotificationRepository') private readonly notificationRepository: NotificationRepository
+    ) {
+    }
+    async execute(notificationData: IMail): Promise <void> {
+        console.log('enviando correo con datos', notificationData)
+        await this.notificationRepository.save(notificationData)
     }
 }

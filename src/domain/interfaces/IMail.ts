@@ -3,8 +3,9 @@ export enum TEMPLATE_EMAIL {
 }
 
 export interface IMail {
-  to: String;
-  subject: String;
-  template: TEMPLATE_EMAIL;
+  to: string;
+  subject: string;
+  template?: TEMPLATE_EMAIL;
   context?: Record<string, any>;
+  body?: string;
 }

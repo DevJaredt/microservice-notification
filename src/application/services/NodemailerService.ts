@@ -1,53 +1,47 @@
 import nodemailer from "nodemailer";
-import { injectable } from "inversify";
-import nodemailerExpressHandlebars from "nodemailer-express-handlebars";
-import { nodeModuleNameResolver } from "typescript";
 
-@injectable()
-export class NodemailerService{
+export class NodemailerService {
   private transporter: nodemailer.Transporter;
 
   constructor() {
     this.transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "tu-email@gmail.com",
-        pass: "tu-contraseña-de-aplicación",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
+    this.configureTemplateEngine();
+  }
+
+  private async configureTemplateEngine() {
+    const { default: hbs } = await import("nodemailer-express-handlebars");
+
     this.transporter.use(
       "compile",
-      nodemailerExpressHandlebars({
+      hbs({
         viewEngine: {
           extname: ".hbs",
-          partialsDir: "./src/templates/",
-          defaultLayout: "",
+          layoutsDir: "src/views/email",
+          defaultLayout: "template",
         },
-        viewPath: "./src/templates/",
+        viewPath: "src/views/email",
+        extName: ".hbs",
       })
     );
   }
 
-  async sendEmail(
-    to: string,
-    subject: string,
-    templateName: string,
-    context: object
-  ): Promise<void> {
+  async sendMail(to: string, subject: string, body: string) {
     const mailOptions = {
-      from: "tu-email@gmail.com",
+      from: process.env.EMAIL_USER,
       to,
       subject,
-      template: templateName,
-      context: context,
+      text: body,
+      template: "template",
+      context: { body },
     };
 
-    try {
-      await this.transporter.sendMail(mailOptions);
-      console.log("Correo enviado");
-    } catch (error) {
-      console.error("Error al enviar correo:", error);
-    }
+    return this.transporter.sendMail(mailOptions);
   }
 }

@@ -1,12 +1,24 @@
 import { NotificationRepository } from "../../domain/repositories/NotificationRepository";
 import { Notification } from "../../domain/entities/Notification";
-import { NotificationModel } from "../database/Models/NotificationModel";
-import { IMail } from "../../domain/interfaces/IMail";
 
+import { IMail } from "../../domain/interfaces/IMail";
+import { NotificationModel } from "../database/models/NotificationModel";
 
 export class MongoNotificationRepository implements NotificationRepository {
   async save(notification: IMail): Promise<void> {
-    await NotificationModel.create(notification);
+    try{
+      if(!notification.to || !notification.body)  {
+
+      }
+      await NotificationModel.create({
+        userId:  notification.to,
+        message: notification.body,
+        status: "pending",
+        createdAt: new Date(),
+      });
+    } catch (error) {
+      console.error("error notification saved", error);
+    }
   }
 
   async findByUserId(userId: string): Promise<void> {

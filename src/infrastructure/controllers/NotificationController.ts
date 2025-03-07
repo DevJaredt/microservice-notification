@@ -1,6 +1,8 @@
+import { inject, injectable } from "inversify";
 import { SendNotificationUseCase } from "../../application/use-cases/SendNotificationUseCase";
 import express, { Request, Response } from "express";
 
+@injectable()
 export class NotificationController {
   constructor(
     private readonly sendNotificationUseCase: SendNotificationUseCase
