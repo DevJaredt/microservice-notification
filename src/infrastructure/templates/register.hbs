@@ -1,0 +1,33 @@
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro Exitoso</title>
+    <style>
+      body { font-family: Arial, sans-serif; background-color: #f4f4f4; display:
+      flex; justify-content: center; align-items: center; height: 100vh; margin:
+      0; } .register-container { max-width: 400px; padding: 20px; border-radius:
+      10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); background-color: #fff;
+      text-align: center; } h2 { color: #28a745; } p { font-size: 16px; margin:
+      8px 0; } .success { color: #155724; background-color: #d4edda; padding:
+      10px; border-radius: 5px; margin-top: 10px; } .btn { display:
+      inline-block; padding: 10px 15px; margin-top: 15px; background: #28a745;
+      color: white; text-decoration: none; border-radius: 5px; transition: 0.3s;
+      } .btn:hover { background: #218838; }
+    </style>
+  </head>
+  <body>
+
+    <div class="register-container">
+      <h2>🎉 ¡Registro Exitoso!</h2>
+      <p><strong>HOLA SR.</strong> {{name}}</p>
+      <p><strong>Correo Electrónico:</strong> {{email}}</p>
+      <p><strong>Fecha de Registro:</strong> {{date}}</p>
+
+      <p class="success">✅ Tu cuenta ha sido creada con éxito.</p>
+
+      <a href="/login" class="btn">Iniciar Sesión</a>
+    </div>
+
+  </body>
+</html>

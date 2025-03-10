@@ -1,27 +1,13 @@
-import express from "express";
-import mongoose from "mongoose";
-import router from "./routes/notificationRoutes";
-import { container } from "./container";
-import { SendNotificationUseCase } from "../application/use-cases/SendNotificationUseCase";
 
-const app = express();
-app.use(express.json());
-app.use(router);
+import { IQueueService } from "../domain/interfaces/IQueueService";
+import { IServer } from "../domain/interfaces/IServer";
+import { container } from "./inversify/inversify.config";
+import { TYPES } from "./inversify/inversify.types";
 
-const startServer = async () => {
-  try {
-    await mongoose.connect(
-      "mongodb://jared:jared123@localhost:27017/notifications?authsource=admin"
-    );
-    console.log("Conectado a MongoDB");
 
-    console.log("✅ Inversify está funcionando correctamente");
-    app.listen(3000, () => {
-      console.log("Servidor corriendo en http://localhost:3000");
-    });
-  } catch (error) {
-    console.error("Error al conectar a MongoDB:", error);
-  }
-};
+const expressApp = container.get<IServer>(TYPES.ExpressApp);
+const queueService = container.get<IQueueService>(TYPES.QueueService);
 
-startServer();
+expressApp.initServer();
+queueService.processJobs();
+

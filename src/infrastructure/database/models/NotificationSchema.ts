@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
+import { NotificationStatus } from "../../../domain/enums/NotificationStatus";
 
 const NotificationSchema = new mongoose.Schema({
   userId: { type: String, required: true },
-  message: { type: String, required: true },
+  message: { type: String },
   status: {
     type: String,
-    enum: ["sent", "pending", "read"],
-    default: "pending",
+    enum: NotificationStatus,  
+    default: NotificationStatus.PENDING,
   },
   createdAt: { type: Date, default: Date.now },
 });

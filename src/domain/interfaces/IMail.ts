@@ -1,6 +1,4 @@
-export enum TEMPLATE_EMAIL {
-  WELCOME = "welcome",
-}
+import { TEMPLATE_EMAIL } from "../enums/TemplateEmail";
 
 export interface IMail {
   to: string;

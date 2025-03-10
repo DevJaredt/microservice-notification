@@ -1,17 +1,15 @@
-import { NotificationRepository } from "../../domain/repositories/NotificationRepository";
-import { Notification } from "../../domain/entities/Notification";
-
 import { IMail } from "../../domain/interfaces/IMail";
-import { NotificationModel } from "../database/models/NotificationModel";
+import { INotificationRepository } from "../../domain/interfaces/INotificationRepository";
+import { NotificationModel } from "../database/models/NotificationSchema";
 
-export class MongoNotificationRepository implements NotificationRepository {
+export class MongoNotificationRepository implements INotificationRepository {
   async save(notification: IMail): Promise<void> {
-    try{
-      if(!notification.to || !notification.body)  {
-
+    try {
+      if (!notification.to || !notification.body) {
       }
+
       await NotificationModel.create({
-        userId:  notification.to,
+        userId: notification.to,
         message: notification.body,
         status: "pending",
         createdAt: new Date(),
@@ -23,9 +21,5 @@ export class MongoNotificationRepository implements NotificationRepository {
 
   async findByUserId(userId: string): Promise<void> {
     await NotificationModel.find({ userId }).exec();
-  }
-
-  async markAsRead(id: string): Promise<void> {
-    await NotificationModel.findByIdAndUpdate(id, { status: "read" }).exec();
   }
 }
