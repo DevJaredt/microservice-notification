@@ -14,20 +14,38 @@ export class QueueService implements IQueueService {
       maxRetriesPerRequest: null,
     });
 
+    this.connection.on("connect", () => {
+      console.log("Redis connection established");
+    });
+
+    this.connection.on("error", (err) => {
+      console.error("Redis connection error:", err);
+    });
+
     this.queue = new Queue("notificationQueue", {
       connection: this.connection,
     });
-    console.log('QueueService: Queue initialized');
+    console.log("QueueService: Queue initialized");
   }
 
   async queueNotification(notificationData: any): Promise<void> {
-    console.log('QueueService: Creating queue...');
-    await this.queue.add("sendNotification", notificationData);
+    try {
+      console.log("QueueService: Creating queue...");
+      await this.queue.add("sendNotification", notificationData);
+      console.log("QueueService: Job added to queue");
+    } catch (error) {
+      console.error("QueueService: Error adding job to queue:", error);
+    }
   }
 
   async addJob(data: any) {
-    console.log('QueueService: Adding job to queue...', data);
-    await this.queue.add("sendNotification", data);
+    try {
+      console.log("QueueService: Adding job to queue...", data);
+      await this.queue.add("sendNotification", data);
+      console.log("QueueService: Job added to queue");
+    } catch (error) {
+      console.error("QueueService: Error adding job to queue:", error);
+    }
   }
 
   processJobs() {

@@ -42,10 +42,13 @@ container
     const notificationService = container.get<INotificationService>(
       TYPES.NotificationService
     );
+    const queueService = container.get<IQueueService>(TYPES.QueueService);
+    TYPES.QueueService
 
     return new SendNotificationUseCase(
       notificationRepository,
-      notificationService
+      notificationService,
+      queueService
     );
   });
 container

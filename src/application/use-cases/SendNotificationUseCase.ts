@@ -4,11 +4,15 @@ import { INotificationUseCase } from "../../domain/interfaces/INotificationUseCa
 import { INotificationRepository } from "../../domain/interfaces/INotificationRepository";
 import { NOTIFICATION_TYPE } from "../../domain/enums/NotificationType";
 import { TEMPLATE_EMAIL } from "../../domain/enums/TemplateEmail";
+import { LogsService } from "../../infrastructure/http/logs.services";
+import { LogType } from "../../domain/enums/LogType";
+import { IQueueService } from "../../domain/interfaces/IQueueService";
 
 export class SendNotificationUseCase implements INotificationUseCase {
   constructor(
     private readonly notificationRepository: INotificationRepository,
-    private readonly notificationService: INotificationService
+    private readonly notificationService: INotificationService,
+    private readonly queueService: IQueueService
   ) {}
   async execute(
     type: NOTIFICATION_TYPE,
@@ -18,6 +22,7 @@ export class SendNotificationUseCase implements INotificationUseCase {
     console.log("Notification Data:", notificationData);
 
     await this.notificationRepository.save(notificationData);
+    await this.queueService.queueNotification(notificationData);
 
     switch (type) {
       case NOTIFICATION_TYPE.USER_CREATED:
@@ -31,6 +36,7 @@ export class SendNotificationUseCase implements INotificationUseCase {
             date: notificationData.context?.date,
           },
         });
+        await LogsService.logNotification(notificationData, LogType.POST);
         break;
       case NOTIFICATION_TYPE.USER_UPDATED:
         await this.notificationService.sendTemplateMail({
@@ -46,6 +52,7 @@ export class SendNotificationUseCase implements INotificationUseCase {
             email: notificationData.context?.email,
           },
         });
+        await LogsService.logNotification(notificationData, LogType.PATCH);
         break;
       case NOTIFICATION_TYPE.ACCOUNT_SEND_MONEY:
         await this.notificationService.sendTemplateMail({
@@ -59,6 +66,7 @@ export class SendNotificationUseCase implements INotificationUseCase {
             success: notificationData.context?.success,
           },
         });
+        await LogsService.logNotification(notificationData, LogType.POST_);
         break;
       case NOTIFICATION_TYPE.ACCOUNT_GET_MONEY:
         await this.notificationService.sendTemplateMail({
@@ -71,6 +79,8 @@ export class SendNotificationUseCase implements INotificationUseCase {
             date: notificationData.context?.date,
           },
         });
+        await LogsService.logNotification(notificationData, LogType.PATCH_);
+        break;
     }
   }
 }

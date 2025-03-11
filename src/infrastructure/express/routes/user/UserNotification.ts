@@ -35,7 +35,7 @@ export class UserNotificationRouter implements IRouterModule<Router> {
       }
     );
 
-    this.router.post(
+    this.router.patch(
       "/send/update",
       async (req: Request, res: Response) => {
         try {
